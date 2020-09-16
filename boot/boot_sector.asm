@@ -3,12 +3,12 @@
 [org 0x7c00] ; bootsector is loaded to 0x7c00
 
 jmp _text
-; put include here:
-%include "boot/realmode_lib.asm"
+
 
 ; set data here
 data:
     start_message: db 0x5b,"  OK  ",0x5d, " Booting in real mode...", 0xD, 0xA, 0
+    MSG_PROT_MODE: db " Successfully landed in 32 bit Protected Mode ", 0xD, 0xA, 0
     BOOT_DRIVE: db 0
 
 _text:
@@ -22,26 +22,26 @@ _text:
 
     mov bx, start_message
     call print_realmode
-    ; mov dx, 0xCAFE
-    ; call print_hex_realmode
-
-    ; temp:
-    mov bx, 0x9000 ; Load 5 sectors to 0x0000 (ES): 0x9000 (BX)
-    mov dh, 2
-    mov dl, [BOOT_DRIVE] ;from the boot disk.
-    call load_disk
-
-    mov dx, [0x9000] ; Print out the first loaded word
-    call print_hex_realmode
-
-    mov dx, [0x9000+0x200] ; print the first word from the second sector (excluding the bootsector)
-    call print_hex_realmode 
+    
+    call switch_pm ; switch to pm
 
     jmp $ ; jmp forever here
+
+    ; put include here:
+    %include "boot/disk.asm"
+    %include "boot/print.asm"
+    %include "boot/gdt.asm"
+    %include "boot/pm_switch.asm"
+    
+    [bits 32]
+    begin_pm:
+        mov edx, MSG_PROT_MODE
+        call print_string_pm
+        jmp $
 
     times 510-($-$$) db 0 ;bootsectors are 512 bytes, last two bytes are magic numbers
 
     dw 0xaa55
     ; The next sectors:
-    times 256 dw 0xCAFE 
-    times 256 dw 0xBABE
+    ; times 256 dw 0xCAFE 
+    ; times 256 dw 0xBABE
