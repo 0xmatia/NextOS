@@ -7,14 +7,12 @@ switch_pm:
     mov eax, cr0
     or eax, 0x1
     mov cr0, eax
-    jmp $
     jmp CODE_SEG:init_pm
 
 
 [bits 32]
 init_pm:
     ; in flat memory model, except for the data segment, every other register points to data
-    jmp $
     mov eax, DATA_SEG
     mov ds, eax
     mov ss, eax
