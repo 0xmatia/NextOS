@@ -1,5 +1,5 @@
 ; switch to protected mode
-
+[bits 16]
 switch_pm:
     cli ; no interrupts, they are useless
     lgdt [gdt_descriptor] ; in gdt.asm, which is included in boot_secotor.asm
