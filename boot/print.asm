@@ -47,7 +47,7 @@ print_hex_realmode:
 
 [bits 32] ; 32 bit pm
 
-VIDEO_MEMORY equ 0xB80000 ; VGA memory
+VIDEO_MEMORY equ 0xB8000 ; VGA memory
 WHITE_ON_BLACK equ 0x0F
 
 ; prints a string pointed by EDX
