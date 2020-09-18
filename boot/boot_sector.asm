@@ -1,7 +1,7 @@
 ; simple boot sector to bootstrap the bootloader and kernel
 
 [org 0x7c00] ; bootsector is loaded to 0x7c00
-
+KERNEL_OFFSET equ 0x1000
 jmp _text
 
 
@@ -9,6 +9,7 @@ jmp _text
 data:
     start_message: db 0x5b,"  OK  ",0x5d, " Booting in real mode...", 0xD, 0xA, 0
     MSG_PROT_MODE: db " Successfully landed in 32 bit Protected Mode ", 0xD, 0xA, 0
+    MSG_LOAD_KERNEL: db " Successfully loaded kernel", 0xD, 0xA, 0
     BOOT_DRIVE: db 0
 
 _text:
@@ -22,6 +23,8 @@ _text:
 
     mov bx, start_message
     call print_realmode
+
+    call load_kernel
     
     call switch_pm ; switch to pm
 
@@ -33,10 +36,22 @@ _text:
     %include "boot/gdt.asm"
     %include "boot/pm_switch.asm"
     
+    [bits 16]
+    ; load_kernel
+    load_kernel:
+        mov bx, MSG_LOAD_KERNEL ; Print a message to say we are loading the kernel
+        call print_realmode
+        mov bx, KERNEL_OFFSET   ; Set -up parameters for our disk_load routine , so
+        mov dh, 15              ; that we load the first 15 sectors ( excluding
+        mov dl, [BOOT_DRIVE]    ; the boot sector ) from the boot disk ( i.e. our
+        call load_disk          ; kernel code ) to address KERNEL_OFFSET
+        ret
+
     [bits 32]
     begin_pm:
         mov edx, MSG_PROT_MODE
         call print_string_pm
+        call KERNEL_OFFSET
         jmp $
 
     times 510-($-$$) db 0 ;bootsectors are 512 bytes, last two bytes are magic numbers
