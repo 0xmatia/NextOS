@@ -31,7 +31,7 @@ build/boot_sector.bin: boot/boot_sector.asm
 
 # link kernel
 build/kernel.bin: obj/boot/kernel_entry.o ${OBJECTS}
-	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
+	${LD} -o $@ -T setup.ld $^ --oformat binary
 
 obj/boot/kernel_entry.o: boot/kernel_entry.asm
 	${ASM} $< -f elf -o $@
