@@ -6,6 +6,8 @@ C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
 OBJ = ${C_SOURCES:.c=.o}
+OBJECTS = ${addprefix ${OBJ_DIR}/, ${OBJ}}
+OBJ_DIR = obj
 CFLAGS = -g
 
 CC = i686-elf-gcc
@@ -28,30 +30,24 @@ build/boot_sector.bin: boot/boot_sector.asm
 	${ASM} $< -f bin -o $@
 
 # link kernel
-build/kernel.bin: build/kernel_entry.o ${OBJ}
+build/kernel.bin: obj/boot/kernel_entry.o ${OBJECTS}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-# # Rule to disassemble the kernel - may be useful to debug
-# build/kernel.dis: build/kernel.bin
-# 	${DISASM} -b 32 $< > $@
+obj/boot/kernel_entry.o: boot/kernel_entry.asm
+	${ASM} $< -f elf -o $@
 
 # Open the connection to qemu and load our kernel-object file with symbols
-debug: os-image.bin kernel.elf
+debug1: os-image.bin kernel.elf
 	${QEMU} -s -fda os-image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
+debug: build/os-image.bin
+	${QEMU} -s -S -drive file=$<,format=raw,if=floppy
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
-%.o: %.c ${HEADERS}
+${OBJECTS}: $(OBJ_DIR)/%.o : %.c
 	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
-%.o: %.asm
-	nasm $< -f elf -o $@
-
-%.bin: %.asm
-	nasm $< -f bin -o $@
-
 clean:
-	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	rm -rf build/* obj/*.o
