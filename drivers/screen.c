@@ -2,7 +2,7 @@
  * @Author: Elad Matia 
  * @Date: 2020-09-22 15:11:43 
  * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-22 16:28:28
+ * @Last Modified time: 2020-09-22 16:34:05
  * 
  *  Implementation of screen methods
  */
@@ -23,10 +23,10 @@ void clear_screen()
 {
     uint8_t *video_buffer = (uint8_t *)VIDEO_ADDRESS;
     uint16_t size = MAX_ROWS * MAX_COLS;
-    for (uint16_t i = 0; i < size; i++)
-    {
-        video_buffer[i * 2] = ' ';
-        video_buffer[i * 2 + 1] = BLACK_ON_WHITE;
+    for (uint8_t i = 0; i<MAX_COLS; i++) {
+        for(uint8_t j = 0; j < MAX_ROWS; j++) {
+            print_char(' ', j, i);
+        }
     }
     update_cursor(0);
 }
@@ -86,8 +86,6 @@ uint16_t print_char(uint8_t character, int8_t row, int8_t col)
         offset += 2;
     }
 
-
-  
     update_cursor(offset);
     return offset;
 }
