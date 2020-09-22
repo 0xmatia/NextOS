@@ -2,7 +2,7 @@
  * @Author: Elad Matia 
  * @Date: 2020-09-22 15:11:43 
  * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-22 17:09:10
+ * @Last Modified time: 2020-09-23 00:39:30
  * 
  *  Implementation of screen methods
  */
@@ -14,6 +14,7 @@ void update_cursor(uint16_t offset);
 uint16_t get_cursor_position(void);
 uint8_t get_offset_col(uint16_t offset);
 uint8_t get_offset_row(uint16_t offset);
+uint16_t handle_scrolling(uint16_t offset);
 
 //////////////////////////////////////////////////
 //              Public Functions                //
@@ -96,6 +97,7 @@ uint16_t print_char(uint8_t character, int8_t row, int8_t col)
         offset += 2;
     }
 
+    offset = handle_scrolling(offset);
     update_cursor(offset);
     return offset;
 }
@@ -127,6 +129,35 @@ uint16_t get_cursor_position(void)
     port_byte_out(REG_SCREEN_CTRL, 15);
     offset += port_byte_in(REG_SCREEN_DATA);
     return offset * 2; /* Position * size of character cell */
+}
+
+/**
+ * @brief The function handles screen scolling. if the text 
+ * reached the bottom of the screen, remove top line and scroll up one line
+ * 
+ * @param offset: the offset of the text
+ * @return uint16_t: the new offset
+ */
+uint16_t handle_scrolling(uint16_t offset) {
+
+    uint8_t* video_buffer = (uint8_t*)VIDEO_ADDRESS;
+    if (offset < MAX_COLS*MAX_ROWS*2) {
+        return offset;
+    }
+    // copy video buffer on line up
+    uint8_t* src = (uint8_t*)VIDEO_ADDRESS + MAX_COLS * 2;
+    uint8_t* dst =  (uint8_t*)VIDEO_ADDRESS;
+    uint32_t size = MAX_COLS * MAX_ROWS * 2 - 2*MAX_COLS;
+    memcpy(src, dst, size);
+
+    // clean last line
+    for (uint8_t i = 0; i<MAX_COLS; i++) {
+        uint16_t pos = 2*((MAX_ROWS-1) * MAX_COLS + i);
+        video_buffer[pos] = 0;
+        video_buffer[pos+1] = 0;
+    }
+    offset -= 2*MAX_COLS;
+    return offset;
 }
 
 /**
