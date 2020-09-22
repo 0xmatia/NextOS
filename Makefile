@@ -9,7 +9,7 @@ DIRS = obj/drivers obj/boot obj/kernel obj/cpu
 OBJDIR = obj
 OBJ = ${C_SOURCES:.c=.o}
 OBJECTS = ${addprefix ${OBJDIR}/, ${OBJ}}
-CFLAGS = -g -ffreestanding 
+CFLAGS = -g -ffreestanding -masm=intel
 
 CC = i686-elf-gcc
 GDB = gdb
@@ -21,7 +21,7 @@ DISASM = ndisasm
 all: create_directories run
 
 create_directories:
-	mkdir -p ${DIRS}
+	@mkdir -p ${DIRS}
 
 run: build/os-image.bin
 	${QEMU} -drive file=$<,format=raw,if=floppy

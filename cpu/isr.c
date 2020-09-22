@@ -81,5 +81,5 @@ char *exception_messages[] = {
 
 void isr_handler(registers32_t regs)
 {
-    int a = 5;
+    kprint(exception_messages[regs.int_no]);
 }
