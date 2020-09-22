@@ -2,7 +2,7 @@
  * @Author: Elad Matia 
  * @Date: 2020-09-22 15:11:43 
  * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-22 16:34:05
+ * @Last Modified time: 2020-09-22 17:09:10
  * 
  *  Implementation of screen methods
  */
@@ -23,8 +23,10 @@ void clear_screen()
 {
     uint8_t *video_buffer = (uint8_t *)VIDEO_ADDRESS;
     uint16_t size = MAX_ROWS * MAX_COLS;
-    for (uint8_t i = 0; i<MAX_COLS; i++) {
-        for(uint8_t j = 0; j < MAX_ROWS; j++) {
+    for (uint8_t i = 0; i < MAX_COLS; i++)
+    {
+        for (uint8_t j = 0; j < MAX_ROWS; j++)
+        {
             print_char(' ', j, i);
         }
     }
@@ -39,7 +41,12 @@ void kprint_at(uint8_t *message, int8_t row, int8_t col)
     {
         update_cursor(2 * (row * MAX_COLS + col));
     }
-
+    else {
+        offset = get_cursor_position();
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
+    }
+    
     while (message[index] != 0)
     {
         offset = print_char(message[index++], row, col);
@@ -77,10 +84,13 @@ uint16_t print_char(uint8_t character, int8_t row, int8_t col)
         offset = 2 * (row * MAX_COLS + col);
     }
 
-    if (character == '\n') {
-        offset = 2*((row+1)*MAX_COLS);
-    } 
-    else {
+    if (character == '\n')
+    {
+        row = get_offset_row(offset); // get updated row, col is 0 anyway
+        offset = 2 * ((row + 1) * MAX_COLS);
+    }
+    else
+    {
         video_buffer[offset] = character;
         video_buffer[offset + 1] = BLACK_ON_WHITE;
         offset += 2;
