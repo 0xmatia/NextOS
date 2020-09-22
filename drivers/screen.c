@@ -12,8 +12,8 @@
 uint16_t print_char(uint8_t character, int8_t row, int8_t col);
 void update_cursor(uint16_t offset);
 uint16_t get_cursor_position(void);
-uint8_t get_offset_col(int8_t offset);
-uint8_t get_offset_row(int8_t offset);
+uint8_t get_offset_col(uint16_t offset);
+uint8_t get_offset_row(uint16_t offset);
 
 //////////////////////////////////////////////////
 //              Public Functions                //
@@ -133,14 +133,14 @@ uint16_t get_cursor_position(void)
  * @brief Get the row out of the offset
  * 
  * @param offset: the new offset calculated in print_char
- * @return uint8_t: the new row extracted from the offset
+ * @return uint16_t: the new row extracted from the offset
  */
-uint8_t get_offset_row(int8_t offset) { return offset / (2 * MAX_COLS); }
+uint8_t get_offset_row(uint16_t offset) { return offset / (2 * MAX_COLS); }
 
 /**
  * @brief Get the new column out of the offset
  * 
  * @param offset: the new offset calculated in print_char
- * @return uint8_t: the new column extracted from the offset
+ * @return uint16_t: the new column extracted from the offset
  */
-uint8_t get_offset_col(int8_t offset) { return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2; }
+uint8_t get_offset_col(uint16_t offset) { return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2; }
