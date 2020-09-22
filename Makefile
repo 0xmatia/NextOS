@@ -36,13 +36,11 @@ build/kernel.bin: obj/boot/kernel_entry.o ${OBJECTS}
 obj/boot/kernel_entry.o: boot/kernel_entry.asm
 	${ASM} $< -f elf -o $@
 
-# Open the connection to qemu and load our kernel-object file with symbols
-debug1: os-image.bin kernel.elf
-	${QEMU} -s -fda os-image.bin &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
-
-debug: build/os-image.bin
+debug: build/os-image.bin build/kernel.elf
 	${QEMU} -s -S -drive file=$<,format=raw,if=floppy
+
+build/kernel.elf: obj/boot/kernel_entry.o ${OBJECTS}
+	${LD} -o $@ -T setup.ld $^
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
