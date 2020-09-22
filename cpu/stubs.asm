@@ -34,14 +34,6 @@ isr_common_stub:
     jmp isr_common_stub
 %endmacro
 
-%macro isr_err 1
-  [GLOBAL isr%1]
-  isr%1:
-    cli
-    push byte %1
-    jmp isr_common_stub
-%endmacro
-
 isr_noerr 0
 isr_noerr 1
 isr_noerr 2
@@ -50,13 +42,13 @@ isr_noerr 4
 isr_noerr 5
 isr_noerr 6
 isr_noerr 7
-isr_err   8
+isr_noerr 8
 isr_noerr 9
-isr_err   10
-isr_err   11
-isr_err   12
-isr_err   13
-isr_err   14
+isr_noerr 10
+isr_noerr 11
+isr_noerr 12
+isr_noerr 13
+isr_noerr 14
 isr_noerr 15
 isr_noerr 16
 isr_noerr 17
