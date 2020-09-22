@@ -18,18 +18,19 @@ typedef struct
     uint16_t base_high; // Higher 16 bits of handler function address */
 } __attribute__((packed)) idt_gate_t;
 
-/* A pointer to the array of interrupt handlers.
- * Assembly instruction 'lidt' will read it */
+/**
+ * A pointer to the array of interrupt handlers.
+*/
 typedef struct
 {
     uint16_t limit; // size of the IDT in bytes - 1
     uint32_t base;  // linear address of the IDT
 } __attribute__((packed)) idt_register_t;
 
-idt_gate_t idt[IDT_ENTRIES];
-idt_register_t idt_reg;
-
 void set_idt_gate(int n, uint32_t handler);
 void load_idt();
+
+extern idt_gate_t idt[IDT_ENTRIES];
+extern idt_register_t idt_reg;
 
 #endif
