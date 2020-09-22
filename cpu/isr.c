@@ -81,4 +81,5 @@ char *exception_messages[] = {
 
 void isr_handler(registers32_t regs)
 {
+    int a = 5;
 }

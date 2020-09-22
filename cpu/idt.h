@@ -15,7 +15,7 @@ typedef struct
     uint16_t sel;       // Kernel segment selector
     uint8_t zero;       // always zero
     uint8_t flags;      // type and attr
-    uint16_t base_high; // Higher 16 bits of handler function address */
+    uint16_t base_high; // Higher 16 bits of handler function address
 } __attribute__((packed)) idt_gate_t;
 
 /**
