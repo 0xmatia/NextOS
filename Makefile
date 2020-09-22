@@ -55,7 +55,7 @@ build/kernel.elf: obj/boot/kernel_entry.o obj/cpu/stubs.o ${OBJECTS}
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
-${OBJDIR}/%.o: %.c
+${OBJDIR}/%.o: %.c ${HEADERS}
 	${CC} ${CFLAGS} -c $< -o $@
 
 clean:
