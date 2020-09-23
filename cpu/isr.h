@@ -3,7 +3,7 @@
 
 #include "idt.h"
 #include <stdint.h>
-#include "../drivers/screen.h"
+#include "../drivers/screen/screen.h"
 
 extern void isr0();
 extern void isr1();

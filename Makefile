@@ -2,9 +2,9 @@
 # $< = first dependency
 # $^ = all dependencies
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
-DIRS = obj/drivers obj/boot obj/kernel obj/cpu obj/libc
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c drivers/screen/*.c cpu/*.c libc/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h drivers/screen/*.h cpu/*.h libc/*.h)
+DIRS = obj/drivers obj/drivers/screen obj/boot obj/kernel obj/cpu obj/libc
 
 OBJDIR = obj
 OBJ = ${C_SOURCES:.c=.o}
@@ -59,4 +59,4 @@ ${OBJDIR}/%.o: %.c ${HEADERS}
 	${CC} ${CFLAGS} -c $< -o $@
 
 clean:
-	rm -rf build/* obj/*/*.o
+	rm -rf build/* obj/*
