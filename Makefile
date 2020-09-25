@@ -9,7 +9,8 @@ DIRS = obj/drivers obj/drivers/screen obj/boot obj/kernel obj/cpu obj/libc
 OBJDIR = obj
 OBJ = ${C_SOURCES:.c=.o}
 OBJECTS = ${addprefix ${OBJDIR}/, ${OBJ}}
-CFLAGS = -g -ffreestanding -masm=intel
+CFLAGS = -g -ffreestanding -masm=intel -Wextra -Wall \
+-Wshadow -Wcast-align -Wstrict-prototypes -Wswitch-default -Wswitch-enum
 
 CC = i686-elf-gcc
 GDB = gdb
@@ -56,6 +57,7 @@ build/kernel.elf: obj/boot/kernel_entry.o obj/cpu/stubs.o ${OBJECTS}
 # Generic rules for wildcards
 # To make an object, always compile from its .c
 ${OBJDIR}/%.o: %.c ${HEADERS}
+	@echo ${CFLAGS}
 	${CC} ${CFLAGS} -c $< -o $@
 
 clean:

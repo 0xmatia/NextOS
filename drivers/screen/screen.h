@@ -26,7 +26,7 @@
  * @brief Clears the entire screen
  * 
  */
-void clear_screen();
+void clear_screen(void);
 
 /**
  * @brief prints a message at specified location. if row or col are negative, prints at cursor's location

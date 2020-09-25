@@ -20,10 +20,8 @@ uint16_t handle_scrolling(uint16_t offset);
 //              Public Functions                //
 //////////////////////////////////////////////////
 
-void clear_screen()
+void clear_screen(void)
 {
-    uint8_t *video_buffer = (uint8_t *)VIDEO_ADDRESS;
-    uint16_t size = MAX_ROWS * MAX_COLS;
     for (uint8_t i = 0; i < MAX_COLS; i++)
     {
         for (uint8_t j = 0; j < MAX_ROWS; j++)

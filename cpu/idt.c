@@ -21,7 +21,7 @@ void set_idt_gate(int n, uint32_t handler)
 /**
  * @brief loads the IDT
  */
-void load_idt()
+void load_idt(void)
 {
     idt_reg.base = (uint32_t)&idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(idt_gate_t) - 1;

@@ -81,5 +81,5 @@ char *exception_messages[] = {
 
 void isr_handler(registers32_t regs)
 {
-    kprint(exception_messages[regs.int_no]);
+    kprint((uint8_t*)exception_messages[regs.int_no]);
 }
