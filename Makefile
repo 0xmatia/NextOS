@@ -38,8 +38,9 @@ build/kernel.bin: ${OBJECTS}
 	${LD} -o $@ -T setup.ld $^ --oformat binary
 
 # debug
-debug: build/os-image.bin build/kernel.elf
-	${QEMU} -s -S -drive file=$<,format=raw,if=floppy
+debug: build/boot_sector.bin build/kernel.elf
+	cat $^ > build/os_image.bin # with symbols
+	${QEMU} -s -S -drive file=build/os_image.bin,format=raw,if=floppy
 
 # build the kernel image with symbols for debugging
 build/kernel.elf: ${OBJECTS}
