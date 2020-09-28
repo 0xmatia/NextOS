@@ -9,9 +9,8 @@ INCLUDE = include
 
 ASM_SOURCES := $(BOOT)/kernel_entry.asm cpu/stubs.asm
 HEADERS = $(shell find $(INCLUDE) -type f -name '*.h')
-C_SOURCES_DOT = $(shell find . -type f -name '*.c' -not -path "./kernel/*")
 KERNEL_SRC = $(wildcard kernel/*.c)
-C_SOURCES = $(KERNEL_SRC) $(C_SOURCES_DOT:./%=%)
+C_SOURCES = $(KERNEL_SRC) $(shell find * -type f -name '*.c' -not -path "./kernel/*")
 
 MKDIR   = mkdir -p
 RMDIR   = rm -rf
@@ -34,7 +33,6 @@ DISASM = ndisasm
 all: dirs run
 
 dirs:
-	echo $(C_SOURCES)
 	@$(MKDIR) $(BUILD) $(OBJ)
 
 run: $(EXE)
