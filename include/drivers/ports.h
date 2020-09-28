@@ -1,11 +1,5 @@
-/*
- * @Author: Elad Matia
- * @Date: 2020-09-21 14:17:43 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-09-21 14:55:46
- * 
- * Defines the interface for communicating with device i/o
- */
+#ifndef PORTS_H
+#define PORTS_H
 
 #include <stdint.h>
 
@@ -41,3 +35,5 @@ uint16_t port_word_in(uint16_t port);
  * @return ** void 
  */
 void port_word_out(uint16_t port, uint16_t data);
+
+#endif

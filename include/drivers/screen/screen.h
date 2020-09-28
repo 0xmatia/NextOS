@@ -1,14 +1,9 @@
-/*
- * @Author: Elad Matia 
- * @Date: 2020-09-22 14:25:55 
- * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-24 01:22:08
- * 
- * Header file for the screen driver
- */
+#ifndef SCREEN_H
+#define SCREEN_H
+
 #include <stdint.h>
-#include "../ports.h"
-#include "../../libc/memory.h"
+#include <drivers/ports.h>
+#include <libc/memory.h>
 
 #define VIDEO_ADDRESS 0xb8000
 #define MAX_ROWS 25
@@ -36,14 +31,14 @@ void clear_screen(void);
  * @param col: col on screen
  * @param color_code: the color of the message
  */
-void kprint_at(uint8_t* message, int8_t row, int8_t col, uint8_t color_code);
+void kprint_at(uint8_t *message, int8_t row, int8_t col, uint8_t color_code);
 
 /**
  * @brief Prints a message the coursor location
  * 
  * @param message: the message to print
  */
-void kprint(uint8_t* message);
+void kprint(uint8_t *message);
 
 /**
  * @brief Prints with specified color
@@ -51,4 +46,6 @@ void kprint(uint8_t* message);
  * @param message the message to print
  * @param color_code: the color code, generated from generate_colorcode function
  */
-void kprint_color(uint8_t* message, uint8_t color_code);
+void kprint_color(uint8_t *message, uint8_t color_code);
+
+#endif

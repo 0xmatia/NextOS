@@ -1,4 +1,4 @@
-#include "isr.h"
+#include <cpu/isr.h>
 
 /**
  * @brief Installs interrupts handlers and calls load_idt
@@ -81,5 +81,5 @@ char *exception_messages[] = {
 
 void isr_handler(registers32_t regs)
 {
-    kprint((uint8_t*)exception_messages[regs.int_no]);
+    kprint((uint8_t *)exception_messages[regs.int_no]);
 }

@@ -1,13 +1,4 @@
-/*
- * @Author: Elad Matia 
- * @Date: 2020-09-22 15:11:43 
- * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-24 01:22:47
- * 
- *  Implementation of screen methods
- */
-
-#include "screen.h"
+#include <drivers/screen/screen.h>
 
 uint16_t print_char(uint8_t character, int8_t row, int8_t col, uint8_t color_code);
 void update_cursor(uint16_t offset);
@@ -40,12 +31,13 @@ void kprint_at(uint8_t *message, int8_t row, int8_t col, uint8_t color_code)
     {
         update_cursor(2 * (row * MAX_COLS + col));
     }
-    else {
+    else
+    {
         offset = get_cursor_position();
         row = get_offset_row(offset);
         col = get_offset_col(offset);
     }
-    
+
     while (message[index] != 0)
     {
         offset = print_char(message[index++], row, col, color_code);
@@ -66,7 +58,6 @@ void kprint_color(uint8_t *message, uint8_t color_code)
     // its means the message will be printed at cursor's location
     kprint_at(message, -1, -1, color_code);
 }
-
 
 //////////////////////////////////////////////////
 //              Private Functions               //
@@ -145,25 +136,28 @@ uint16_t get_cursor_position(void)
  * @param offset: the offset of the text
  * @return uint16_t: the new offset
  */
-uint16_t handle_scrolling(uint16_t offset) {
+uint16_t handle_scrolling(uint16_t offset)
+{
 
-    uint8_t* video_buffer = (uint8_t*)VIDEO_ADDRESS;
-    if (offset < MAX_COLS*MAX_ROWS*2) {
+    uint8_t *video_buffer = (uint8_t *)VIDEO_ADDRESS;
+    if (offset < MAX_COLS * MAX_ROWS * 2)
+    {
         return offset;
     }
     // copy video buffer on line up
-    uint8_t* src = (uint8_t*)VIDEO_ADDRESS + MAX_COLS * 2;
-    uint8_t* dst =  (uint8_t*)VIDEO_ADDRESS;
-    uint32_t size = MAX_COLS * MAX_ROWS * 2 - 2*MAX_COLS;
+    uint8_t *src = (uint8_t *)VIDEO_ADDRESS + MAX_COLS * 2;
+    uint8_t *dst = (uint8_t *)VIDEO_ADDRESS;
+    uint32_t size = MAX_COLS * MAX_ROWS * 2 - 2 * MAX_COLS;
     memcpy(src, dst, size);
 
     // clean last line
-    for (uint8_t i = 0; i<MAX_COLS; i++) {
-        uint16_t pos = 2*((MAX_ROWS-1) * MAX_COLS + i);
+    for (uint8_t i = 0; i < MAX_COLS; i++)
+    {
+        uint16_t pos = 2 * ((MAX_ROWS - 1) * MAX_COLS + i);
         video_buffer[pos] = 0;
-        video_buffer[pos+1] = 0;
+        video_buffer[pos + 1] = 0;
     }
-    offset -= 2*MAX_COLS;
+    offset -= 2 * MAX_COLS;
     return offset;
 }
 

@@ -1,14 +1,6 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-/*
- * @Author: Elad Matia 
- * @Date: 2020-09-24 00:54:24 
- * @Last Modified by: Elad Matia
- * @Last Modified time: 2020-09-24 01:12:27
- * 
- *  Provide a simple interface for generating color code for kprint_color
- */
 #include <stdint.h>
 
 typedef enum
@@ -29,7 +21,7 @@ typedef enum
     PINK = 0xd,
     YELLOW = 0xe,
     WHITE = 0xf,
-}Color;
+} Color;
 
 /**
  * @brief Generate a color code from foreground and background color.
@@ -40,6 +32,5 @@ typedef enum
  * @return uint8_t 
  */
 uint8_t generate_colorcode(Color foreground, Color background);
-
 
 #endif

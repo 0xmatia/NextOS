@@ -1,9 +1,9 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "idt.h"
+#include <cpu/idt.h>
 #include <stdint.h>
-#include "../drivers/screen/screen.h"
+#include <drivers/screen/screen.h>
 
 extern void isr0(void);
 extern void isr1(void);

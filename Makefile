@@ -5,13 +5,14 @@
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c drivers/screen/*.c cpu/*.c libc/*.c)
 ASM_SOURCES := boot/kernel_entry.asm cpu/stubs.asm
 HEADERS = $(wildcard kernel/*.h drivers/*.h drivers/screen/*.h cpu/*.h libc/*.h)
+INCLUDE = ./include
 
 OBJDIR = obj
 C_OBJ = ${C_SOURCES:.c=.o}
 ASM_OBJ = ${ASM_SOURCES:.asm=.o}
 OBJECTS := ${addprefix ${OBJDIR}/, ${C_OBJ}} ${addprefix ${OBJDIR}/, ${ASM_OBJ}}
 
-CFLAGS = -g -ffreestanding -masm=intel -Wextra -Wall \
+CFLAGS = -g -ffreestanding -masm=intel -I$(INCLUDE) -Wextra -Wall \
 -Wshadow -Wcast-align -Wstrict-prototypes -Wswitch-default -Wswitch-enum
 CC = i686-elf-gcc
 GDB = gdb
