@@ -51,7 +51,7 @@ $(BUILD)/kernel.bin: ${OBJECTS}
 	${LD} -o $@ -T setup.ld $^ --oformat binary
 
 # debug
-debug: $(EXE) $(BUILD)/kernel.elf
+debug: dirs $(EXE) $(BUILD)/kernel.elf
 	${QEMU} -s -S -drive file=$(EXE),format=raw,if=floppy
 
 # build the kernel image with symbols for debugging
