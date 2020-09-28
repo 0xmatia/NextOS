@@ -2,10 +2,17 @@
 # $< = first dependency
 # $^ = all dependencies
 
+BUILD = build
+BOOT = boot
+
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c drivers/screen/*.c cpu/*.c libc/*.c)
-ASM_SOURCES := boot/kernel_entry.asm cpu/stubs.asm
+ASM_SOURCES := $(BOOT)/kernel_entry.asm cpu/stubs.asm
 HEADERS = $(wildcard kernel/*.h drivers/*.h drivers/screen/*.h cpu/*.h libc/*.h)
-INCLUDE = ./include
+INCLUDE = include
+
+MKDIR   = mkdir -p
+RMDIR   = rm -rf
+EXE     = $(BUILD)/NextOs.bin
 
 OBJDIR = obj
 C_OBJ = ${C_SOURCES:.c=.o}
@@ -21,42 +28,45 @@ LD = i686-elf-ld
 ASM = nasm
 DISASM = ndisasm
 
-all: run
+all: dirs run
 
-run: build/os-image.bin
+dirs:
+	$(MKDIR) $(BUILD) $(OBJ)
+
+run: $(EXE)
 	${QEMU} -drive file=$<,format=raw,if=floppy
 
-build/os-image.bin: build/boot_sector.bin build/kernel.bin
+$(EXE): $(BUILD)/boot_sector.bin $(BUILD)/kernel.bin
 	cat $^ > $@
 
 ###############BOOT SECTOR#################
-build/boot_sector.bin: boot/boot_sector.asm
+$(BUILD)/boot_sector.bin: $(BOOT)/boot_sector.asm
 	${ASM} $< -f bin -o $@
 
 ############################KERNEL#################
 # Build the kernel.bin file - made from source files and kernel_entry.o assembly file
-build/kernel.bin: ${OBJECTS}
+$(BUILD)/kernel.bin: ${OBJECTS}
 	${LD} -o $@ -T setup.ld $^ --oformat binary
 
 # debug
-debug: build/os-image.bin build/kernel.elf
-	${QEMU} -s -S -drive file=build/os-image.bin,format=raw,if=floppy
+debug: $(EXE) $(BUILD)/kernel.elf
+	${QEMU} -s -S -drive file=$(EXE),format=raw,if=floppy
 
 # build the kernel image with symbols for debugging
-build/kernel.elf: ${OBJECTS}
+$(BUILD)/kernel.elf: ${OBJECTS}
 	${LD} -o $@ -T setup.ld $^
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
 ${OBJDIR}/%.o: %.c ${HEADERS}
-	@mkdir -p $(dir $@)
+	@$(MKDIR) $(dir $@)
 	${CC} ${CFLAGS} -c $< -o $@
 
 # Generic rule for assembling .asm files, except
 # for boot_sector.asm
 ${OBJDIR}/%.o: %.asm
-	@mkdir -p $(dir $@)
+	@$(MKDIR) $(dir $@)
 	${ASM} $< -f elf -o $@
 
 clean:
-	rm -rf build/* obj/*
+	$(RMDIR) $(BUILD) $(OBJDIR)
