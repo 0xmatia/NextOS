@@ -5,10 +5,13 @@
 BUILD = build
 BOOT = boot
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c drivers/screen/*.c cpu/*.c libc/*.c)
-ASM_SOURCES := $(BOOT)/kernel_entry.asm cpu/stubs.asm
-HEADERS = $(wildcard kernel/*.h drivers/*.h drivers/screen/*.h cpu/*.h libc/*.h)
 INCLUDE = include
+
+ASM_SOURCES := $(BOOT)/kernel_entry.asm cpu/stubs.asm
+HEADERS = $(shell find $(INCLUDE) -type f -name '*.h')
+C_SOURCES_DOT = $(shell find . -type f -name '*.c' -not -path "./kernel/*")
+KERNEL_SRC = $(wildcard kernel/*.c)
+C_SOURCES = $(KERNEL_SRC) $(C_SOURCES_DOT:./%=%)
 
 MKDIR   = mkdir -p
 RMDIR   = rm -rf
@@ -31,7 +34,8 @@ DISASM = ndisasm
 all: dirs run
 
 dirs:
-	$(MKDIR) $(BUILD) $(OBJ)
+	echo $(C_SOURCES)
+	@$(MKDIR) $(BUILD) $(OBJ)
 
 run: $(EXE)
 	${QEMU} -drive file=$<,format=raw,if=floppy
