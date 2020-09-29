@@ -49,14 +49,22 @@ _text:
 
     [bits 32]
     begin_pm:
+        push ebp
+        mov ebp, esp
         mov edx, MSG_PROT_MODE
         call print_string_pm
         call KERNEL_OFFSET
         jmp $
-
-    times 510-($-$$) db 0 ;bootsectors are 512 bytes, last two bytes are magic numbers
+        mov esp, ebp
+        pop ebp
+        times 510-($-$$) db 0 ;bootsectors are 512 bytes, last two bytes are magic numbers
 
     dw 0xaa55
     ; The next sectors:
     ; times 256 dw 0xCAFE 
     ; times 256 dw 0xBABE
+
+section .bss
+stack_begin:
+    resb 4096
+stack_end:

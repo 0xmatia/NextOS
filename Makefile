@@ -14,7 +14,7 @@ C_SOURCES = $(KERNEL_SRC) $(shell find * -type f -name '*.c' -not -path "./kerne
 
 MKDIR   = mkdir -p
 RMDIR   = rm -rf
-EXE     = $(BUILD)/NextOs.bin
+EXE     = $(BUILD)/NextOS.bin
 
 OBJDIR = obj
 C_OBJ = ${C_SOURCES:.c=.o}
@@ -42,13 +42,13 @@ $(EXE): $(BUILD)/boot_sector.bin $(BUILD)/kernel.bin
 	cat $^ > $@
 
 ###############BOOT SECTOR#################
-$(BUILD)/boot_sector.bin: $(BOOT)/boot_sector.asm
+$(BUILD)/boot_sector.bin: $(BOOT)/boot_sector.asm ${OBJECTS}
 	${ASM} $< -f bin -o $@
 
 ############################KERNEL#################
 # Build the kernel.bin file - made from source files and kernel_entry.o assembly file
 $(BUILD)/kernel.bin: ${OBJECTS}
-	${LD} -o $@ -T setup.ld $^ --oformat binary
+	${LD} -o $@ -T linker.ld $^ --oformat binary
 
 # debug
 debug: dirs $(EXE) $(BUILD)/kernel.elf
@@ -56,7 +56,7 @@ debug: dirs $(EXE) $(BUILD)/kernel.elf
 
 # build the kernel image with symbols for debugging
 $(BUILD)/kernel.elf: ${OBJECTS}
-	${LD} -o $@ -T setup.ld $^
+	${LD} -o $@ -T linker.ld $^
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c

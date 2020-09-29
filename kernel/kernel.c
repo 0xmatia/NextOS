@@ -21,4 +21,5 @@ void kmain(void)
 
     clear_screen();
     kprint(banner);
+     __asm__("hlt");
 }
