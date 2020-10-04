@@ -19,7 +19,7 @@ EXE     = $(BUILD)/NextOS.bin
 OBJDIR = obj
 C_OBJ = ${C_SOURCES:.c=.o}
 ASM_OBJ = ${ASM_SOURCES:.asm=.o}
-OBJECTS := ${addprefix ${OBJDIR}/, ${C_OBJ}} ${addprefix ${OBJDIR}/, ${ASM_OBJ}}
+OBJECTS := ${addprefix ${addprefix ${OBJDIR}/, ${ASM_OBJ}} ${OBJDIR}/, ${C_OBJ}}
 
 CFLAGS = -g -ffreestanding -masm=intel -I$(INCLUDE) -Wextra -Wall \
 -Wshadow -Wcast-align -Wstrict-prototypes -Wswitch-default -Wswitch-enum

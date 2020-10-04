@@ -7,10 +7,9 @@
  * @brief kmain - Entry point of kernel
  *
  **/
-void kmain(void)
-{
-    isr_install();
-    uint8_t banner[312 + 35 + 35] = "\
+void kmain(void) {
+  isr_install();
+  uint8_t banner[312 + 35 + 35] = "\
           #     #                     #######  #####\n\
           ##    # ###### #    # ##### #     # #     #\n\
           # #   # #       #  #    #   #     # #\n\
@@ -19,7 +18,6 @@ void kmain(void)
           #    ## #       #  #    #   #     # #     #\n\
           #     # ###### #    #   #   #######  #####\n";
 
-    clear_screen();
-    kprint(banner);
-     __asm__("hlt");
+  clear_screen();
+  kprint(banner);
 }
